@@ -11,7 +11,7 @@ dotenv.config();
 const port = process.env.PORT || 5000;
 
 // Adicionando CORS e body-parser
-const allowedOrigins = [
+/* const allowedOrigins = [
     'http://localhost:3000',            // Para desenvolvimento local
     'https://natacao-react.vercel.app' // Para produção
 ];
@@ -26,8 +26,8 @@ app.use(cors({
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-}));
-
+})); */
+app.use(cors());
 
 app.use(bodyParser.json());
 //app.use(helmet()); // Ativando Helmet
@@ -68,9 +68,8 @@ app.use('/api/migracao', migracao);
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
-  // Captura todas as requisições que não sejam da API e serve o React
   app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
   });
 }
 
