@@ -30,7 +30,7 @@ router.get('/resultados', async (req, res) => {
 router.get('/listaEquipes', async (req, res) => {
     console.log('Acessando rota /listaEquipes'); // Log para verificar a chamada
     try {
-        const [rows] = await pool.query('SELECT DISTINCT Equipe FROM temp WHERE Equipe IS NOT NULL');
+        const [rows] = await db.query('SELECT DISTINCT Equipe FROM temp WHERE Equipe IS NOT NULL');
 
         if (!Array.isArray(rows)) {
             console.error('Resposta inesperada de /listaEquipes:', rows);
