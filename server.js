@@ -10,23 +10,6 @@ const bodyParser = require('body-parser'); //backend interpreta os json nas requ
 dotenv.config();
 const port = process.env.PORT || 5000;
 
-// Adicionando CORS e body-parser
-/* const allowedOrigins = [
-    'http://localhost:3000',            // Para desenvolvimento local
-    'https://natacao-react.vercel.app' // Para produção
-];
-
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Origem não permitida pelo CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-})); */
 app.use(cors());
 
 app.use(bodyParser.json());
@@ -40,7 +23,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
   console.log(`Ambiente: ${process.env.NODE_ENV}`);
-  console.log(`Origens permitidas: ${allowedOrigins.join(', ')}`);
 });
 
 // Importando e utilizando rotas
@@ -63,15 +45,6 @@ app.use('/api/inscricao', inscricaoRoutes);
 app.use('/api/rankings', rankingsRoutes);
 app.use(uploadRoutes); // Adiciona as rotas de upload
 app.use('/api/migracao', migracao);
-
-// Servir o frontend em produção
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'frontend', 'build')));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
-  });
-}
 
 // Página não encontrada
 app.use((req, res) => {
