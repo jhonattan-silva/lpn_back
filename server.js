@@ -51,6 +51,16 @@ app.use((req, res) => {
   res.status(404).send('Desculpe, não pode passar por aqui!');
 });
 
+// Inicializa o servidor no modo tradicional apenas localmente
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
+  });
+}
+
+// Exporta o app para que o Vercel possa usá-lo como Serverless Function
+module.exports = app;
+
 
 // Exportando conexão com banco de dados
 module.exports = db;
