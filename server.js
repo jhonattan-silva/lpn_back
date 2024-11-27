@@ -1,31 +1,24 @@
 const express = require('express');
-const dotenv = require('dotenv'); //salva credenciais em outro arquivo
+const dotenv = require('dotenv');
 const app = express(); // backend/server.js
-const db = require('./config/db');// Conexão com banco de dados
-const cors = require('cors'); // Garante permissao de requisições front->backend
-const bodyParser = require('body-parser'); //backend interpreta os json nas requisições
-//const helmet = require('helmet'); // Helmet
+const db = require('./config/db'); // Conexão com banco de dados
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-// Definindo porta e inicializando dotenv
+// Configuração de variáveis de ambiente
 dotenv.config();
 const port = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
-
 app.use(bodyParser.json());
-//app.use(helmet()); // Ativando Helmet
 
+// Rotas básicas
 app.get('/', (req, res) => {
   res.send(`'Backend está funcionando!'`);
 });
 
-// Inicialização do servidor
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
-  console.log(`Ambiente: ${process.env.NODE_ENV}`);
-});
-
-// Importando e utilizando rotas
+// Importando rotas
 const balizamentoRoutes = require('./routes/balizamentoRoutes');
 const equipesRoutes = require('./routes/equipesRoutes');
 const etapasRoutes = require('./routes/etapasRoutes');
@@ -33,8 +26,8 @@ const usuariosRoutes = require('./routes/usuariosRoutes');
 const nadadoresRoutes = require('./routes/nadadoresRoutes');
 const inscricaoRoutes = require('./routes/inscricaoRoutes');
 const rankingsRoutes = require('./routes/rankingsRoutes');
-const uploadRoutes = require('./uploads'); // Importa o arquivo uploads.js
-const migracao = require('./routes/migracaoRoute'); //rota para ajudar na migração dos dados
+const uploadRoutes = require('./uploads');
+const migracao = require('./routes/migracaoRoute');
 
 app.use('/api/balizamento', balizamentoRoutes);
 app.use('/api/equipes', equipesRoutes);
@@ -43,7 +36,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/nadadores', nadadoresRoutes);
 app.use('/api/inscricao', inscricaoRoutes);
 app.use('/api/rankings', rankingsRoutes);
-app.use(uploadRoutes); // Adiciona as rotas de upload
+app.use(uploadRoutes);
 app.use('/api/migracao', migracao);
 
 // Página não encontrada
@@ -51,16 +44,13 @@ app.use((req, res) => {
   res.status(404).send('Desculpe, não pode passar por aqui!');
 });
 
-// Inicializa o servidor no modo tradicional apenas localmente
+// Inicializa o servidor apenas localmente ou no Vercel
 if (require.main === module) {
   app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
+    console.log(`Ambiente: ${process.env.NODE_ENV || 'desenvolvimento'}`);
   });
 }
 
-// Exporta o app para que o Vercel possa usá-lo como Serverless Function
+// Exporta o app para uso em Serverless Functions
 module.exports = app;
-
-
-// Exportando conexão com banco de dados
-module.exports = db;
